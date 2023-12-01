@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Controle da Cafeteira</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='coffee_style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Controle da Cafeteira</h1>
+    </div>
+    <div class="content">
+      <div class="menu">
+        <button id="repeatButton" class="toggle-button" onclick="toggleRepeat()">Repetir todo dia</button>
+        <button id="filledButton" class="toggle-button" onclick="toggleFilled()">Cafeteira foi preenchida?</button>
+        <button id="confirmButton" class="toggle-button" onclick="confirmCoffee()" disabled>Confirmar café</button>
+        <label>
+          Hora:
+          <input type="time" id="coffeeTime" name="hora">
+        </label>
+      </div>
+    </div>
+    <div class="footer">
+      <a href="{{ url_for('index') }}">voltar ao menu anterior</a>
+  </div>
+  </div>
+  <script>
+    var repeatDaily = false;
+    function toggleRepeat() {
+      var repeatButton = document.getElementById("repeatButton");
+    
+      if (repeatButton) {
+        repeatButton.classList.toggle("active");
+        
+        // Update the repeatDaily flag based on the button state
+        repeatDaily = repeatButton.classList.contains("active");
+      }
+    }
+
+    function toggleFilled() {
+      var filledButton = document.getElementById("filledButton");
+      var confirmButton = document.getElementById("confirmButton");
+    
+      if (filledButton) {
+        filledButton.classList.toggle("active");
+    
+        // Enable or disable the confirmButton based on the filledButton state
+        if (filledButton.classList.contains("active")) {
+          confirmButton.disabled = false; // Enable the confirmButton
+        } else {
+          confirmButton.disabled = true; // Disable the confirmButton
+        }
+      }
+    }
+    
+    function confirmCoffee() {
+      var coffeeTime = document.getElementById("coffeeTime").value;
+      var filledButton = document.getElementById("filledButton");
+      var confirmButton = document.getElementById("confirmButton");
+    
+      // Check if the filledButton is clicked (contains the "active" class)
+      if (filledButton && filledButton.classList.contains("active")) {
+        if (coffeeTime) {
+          // Enable the confirmButton and proceed with the confirmation logic
+          confirmButton.disabled = false;
+    
+          // Check the repeatDaily flag before sending the request to the server
+          if (repeatDaily) {
+            // Assuming you are using fetch to send the request to the server
+            fetch("/confirm-coffee", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                time: coffeeTime,
+              }),
+            })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.text();
+              })
+              .then(data => {
+                console.log(data); // Log the response from the server
+              })
+              .catch(error => {
+                console.error("Error:", error);
+                // Handle server-side errors here
+              });
+          } else {
+            console.log(`Confirmed Coffee Time: ${coffeeTime}, keeping the configuration (repeatDaily is false)`);
+          }
+        } else {
+          // Add the shake animation class to visually notify the user
+          confirmButton.classList.add("shake");
+    
+          // Remove the shake class and enable the confirmButton after the animation completes
+          setTimeout(() => {
+            confirmButton.classList.remove("shake");
+            confirmButton.disabled = false; // Enable the confirmButton
+          }, 500);
+    
+          console.log("Error: Please set a time before confirming coffee!");
+        }
+      } else {
+        // If filledButton is not clicked, disable the confirmButton
+        confirmButton.disabled = true;
+      }
+    }
+    
+    
+    
+    
+  </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+/* coffee_style.css */
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-image: url('coffee-background.jpg'); /* URL to your background image */
+  background-size: cover; /* Ensure the image covers the entire viewport */
+  background-position: center ; /* Center the background image */
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.container {
+  position:relative;
+  top: 10px; /* Adjust the top value as needed */
+  max-width: 600px;
+  background-color: rgba(255, 255, 255, 0.5); /* White container background with some transparency */
+  border-radius: 15px; /* Rounded corners */
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+}
+.header h1 {
+  color: #4d362d; /* Deep brown header text color */
+  text-align: center;
+}
+
+.content {
+  margin-top: 20px;
+}
+
+.menu {
+  text-align: center;
+}
+
+.toggle-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #8c6d5b; /* Coffee brown button color */
+  color: #fff; /* White button text color */
+  border: none;
+  border-radius: 25px; /* Round the button corners */
+  margin: 5px;
+  cursor: pointer;
+}
+
+.toggle-button.active {
+  background-color: #5a3f31; /* Darker brown for active state */
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  color: #4d362d; /* Deep brown label text color */
+}
+
+input[type="time"] {
+  padding: 5px;
+  border: 1px solid #8c6d5b; /* Coffee brown border for input */
+  border-radius: 5px; /* Rounded corners for input */
+}
+
+.footer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+a {
+  color: #8c6d5b; /* Coffee brown link color */
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#confirmButton:disabled {
+  background-color: #8f8681; /* Brown-grayish color for disabled state */
+  cursor: not-allowed; /* Show not-allowed cursor for disabled state */
+}
+
+/* Add this CSS class for the shake animation */
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-2px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(2px);
+  }
+}
+
+/* Apply the animation to the button when it has the "shake" class */
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+

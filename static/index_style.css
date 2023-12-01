@@ -1,0 +1,70 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  background-image: url('./HA-background.jpg'); /* URL to your background image */
+  background-size: cover; /* Ensure the image covers the entire viewport */
+  background-position: center ; /* Center the background image */
+  background-color: #f5f5f5; /* Light gray background color */
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.container {
+  max-width: 600px;
+  background-color:  rgba(255, 255, 255, 0.8); /* White container background */
+  border-radius: 15px; /* Rounded corners */
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow for depth */
+}
+
+.header h1 {
+  color: #095c22; /* Dark blue header text color */
+  text-align: center;
+}
+
+.devices {
+  text-align: center;
+}
+
+.device {
+  display: inline-block;
+  margin: 20px;
+  text-decoration: none;
+  color: #333; /* Dark gray text color */
+  transition: transform 0.3s ease-in-out;
+}
+
+.device:hover {
+  transform: scale(1.1); /* Hover effect for scaling */
+}
+
+.device img {
+  width: 100px; /* Adjust the image size as needed */
+  height: 100px;
+  display: block;
+  margin: 0 auto;
+  border-radius: 10px; /* Rounded corners for images */
+}
+
+.device p {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #444; /* Slightly darker text color */
+}
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .container {
+    max-width: 90%; /* Adjust the maximum width for smaller screens */
+  }
+
+  .device {
+    margin: 10px; /* Adjust the margin for smaller screens */
+  }
+
+  .device img {
+    width: 80px; /* Adjust the image size for smaller screens */
+    height: 80px;
+  }
+}
