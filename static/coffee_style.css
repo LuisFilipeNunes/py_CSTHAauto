@@ -99,3 +99,37 @@ a:hover {
 }
 
 
+@media screen and (max-width: 1200px) {
+  body {
+    background-position: top; /* Adjust background positioning for better mobile experience */
+    background-size: scale; /* Resize image proportionally */
+  }
+  .container {
+    position: fixed;
+    top: 180px;
+    left:auto;
+    width: 75%; /* Set container width to 90% */
+    max-width: none; /* Remove the max-width limit */
+    box-shadow: none; /* Disable shadow for smaller screens */
+  }
+  .header h1{
+    font-size: 65px;
+
+  }
+  .content,
+  .menu,
+  .footer {
+    text-align: center; /* Align content left for better readability */
+    font-size: 45px;
+  }
+  .toggle-button {
+    margin: 10px auto; /* Center the button horizontally */
+    font-size: 45px;
+  }
+  label {
+    margin-bottom: 5px; /* Adjust label spacing */
+  }
+  input[type="time"] {
+    width: 100%; /* Make input field span the full width */
+  }
+}

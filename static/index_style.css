@@ -53,18 +53,18 @@ body {
   font-weight: bold;
   color: #444; /* Slightly darker text color */
 }
-/* Responsive Styles */
-@media (max-width: 768px) {
+@media screen and (max-width: 1200px) {
+  body {
+    background-position: left; /* Adjust background positioning for better mobile experience */
+    background-size: scale; /* Resize image proportionally */
+  }
   .container {
-    max-width: 90%; /* Adjust the maximum width for smaller screens */
+    width: 75%; /* Set container width to 90% */
+    max-width: none; /* Remove the max-width limit */
+    box-shadow: none; /* Disable shadow for smaller screens */
   }
+  .header h1{
+    font-size: 65px;
 
-  .device {
-    margin: 10px; /* Adjust the margin for smaller screens */
-  }
-
-  .device img {
-    width: 80px; /* Adjust the image size for smaller screens */
-    height: 80px;
   }
 }

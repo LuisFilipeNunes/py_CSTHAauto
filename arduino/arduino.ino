@@ -1,66 +1,62 @@
-// Projeto 21 – Configurando o shield ethernet com o Arduino
 
-// Protocolo utilizado para fazer a comunicação com o Arduino e...
-//Shield Ethernet
 #include <SPI.h>
 #include <Arduino.h>
-#include <Ethernet.h> // Biblioteca utilizada para funções internas do shield
 #include <ArduinoJson.h> 
-// A linha abaixo permite definir o endereço físico (MAC ADDRESS) da placa...
-//de rede.
 
 byte mac[] = { 0xAB, 0xCD, 0x12, 0x34, 0xFF, 0xCA };
 
-//Os valores abaixo definem o endereço IP, gateway e máscara.
+//Defines the shield configuration, addresses, mac...
 
-IPAddress ip(10,0,11,104); // Define o endereço IP.
-IPAddress gateway(10,0,11,167); // Define o gateway.
-IPAddress subnet(255, 255, 255, 0); // Define a máscara de rede.
-IPAddress server(10, 0, 11, 167);  // Replace with your server's IP address
+IPAddress ip(10,0,11,104); 
+IPAddress gateway(10,0,11,167); 
+IPAddress subnet(255, 255, 255, 0);
+IPAddress server(10, 0, 11, 167); 
 EthernetClient client;
 
-String receivedData;
-boolean startFlag;
+String receivedData;  // String to store received data from server
+boolean startFlag = false;  // Flag to indicate start of JSON data
 
 
 void setup() {
+  //Sets pins 8 and 9 as outputs, they are connected to the relay.
   Serial.begin(9600);
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
   digitalWrite(8, HIGH);
   digitalWrite(9, HIGH);
-Ethernet.begin(mac, ip); // Inicializa a placa com os dados fornecidos
- // Make sure to include the appropriate Ethernet library for your Arduino
-
+Ethernet.begin(mac, ip); 
 }
+
 void loop() {
+
+  //Attempt to connect to the server. Then, makes a GET request for the JSON file. If it is complete, it will send it to the processJson_go() 
   if (client.connect(server, 5000)) {
+    client.println("=======================================");
     Serial.println("Connected to server");
-    client.println("GET /get-coffee-data HTTP/1.1");
-    client.println("Host: 32.0.1.20");
-    client.println("Connection: close");
-    client.println();
+    client.println("GET /get-coffee-data HTTP/1.1");;
+    client.println("=======================================");
 
     while (client.connected()) {
       if (client.available()) {
         char c = client.read();
-        // Accumulate the received data
         if (c == '{') {
           startFlag = true;
+          receivedData = "";
         }
-        if (startFlag == true){
+        else if (startFlag == true){
           receivedData += c;
         }
         if (c == '}') {
-          processJson_go(receivedData);
-          // Reset the received data for the next iteration
-          receivedData = "";
           startFlag = false;
+          processJson_go(receivedData);        
         }
       }
     }
+    client.println("=======================================");
     client.stop();
     Serial.println("Connection closed");
+    Serial.println("=======================================");
+    
   } else {
     Serial.println("Unable to connect to server");
   }
@@ -82,16 +78,13 @@ void processJson_go(String jsonStr) {
   String CoffeeTime = doc["coffeeTime"];
   String ShutdownTime = doc["shutdownTime"];
   String Realtime = doc["realTime"];
-
-  boolean shutdownFlag = doc["shutdownFlag"];
   boolean manualControlFlag = doc["manualControl"];
-  boolean timeCheck;
 
-  int CTHour, CTMin, STHour, STMin, RTHour, RTMin;
+  int CT[2], RT[2], ST[2];
 
-  parseTimeString(Realtime, RTHour, RTMin);
-  parseTimeString(CoffeeTime, CTHour, CTMin);
-  parseTimeString(ShutdownTime, STHour, STMin);
+  RT = parseTimeString(Realtime);
+  CT = parseTimeString(CoffeeTime);
+  ST = parseTimeString(ShutdownTime);
 
   if (manualControlFlag){
     Serial.println("Manual control activated");
@@ -100,56 +93,56 @@ void processJson_go(String jsonStr) {
     return;
   }
 
-  boolean checkShutdownTime;
-  boolean checkCoffeTime = checkTime(RTHour, RTMin, CTHour, CTMin);
-  
-  if(shutdownFlag){
-    checkShutdownTime = checkTime(RTHour, RTMin, STHour, STMin);
-    if (checkShutdownTime){
+  boolean checkShutdownTime = checkTime(RT , ST);
+  boolean checkCoffeTime = checkTime(RT, CT);
+
+  if (checkShutdownTime){
      Serial.println("Shutdown Time!");
       digitalWrite(8, HIGH);
       digitalWrite(9, HIGH);
       return;
     }
-    else if(checkCoffeTime){
-      Serial.println("Coffe time boy, but has a shutdown time!");
+  else if(checkCoffeTime){
+      Serial.println("Coffeetime!");
       digitalWrite(8, LOW);
       digitalWrite(9, LOW);
       return;
     }
-    else{
-      Serial.println("Waiting for coffe time");
+  else{
+      Serial.println("Waiting for coffee time");
       digitalWrite(8, HIGH);
       digitalWrite(9, HIGH);
       return;
     }
     
   }
-  if(checkCoffeTime){
-    Serial.println("Coffe time boy!");
-    digitalWrite(8, LOW);
-    digitalWrite(9, LOW);
-  }
-  else {
-    Serial.println("Waiting for coffe time");
-    digitalWrite(8, HIGH);
-    digitalWrite(9, HIGH); 
-  }
 
-}
-void parseTimeString(String timeString, int &hour, int &minute){
+int* parseTimeString(String timeString) {
+//Parse the string formated time info to a array with int values. 
+
   int colonPos = timeString.indexOf(':');
+  int* timeArray = new int[2]; 
 
-  hour = timeString.substring(0, colonPos).toInt();
-  minute = timeString.substring(colonPos + 1).toInt(); 
+  timeArray[0] = timeString.substring(0, colonPos).toInt();
+  timeArray[1] = timeString.substring(colonPos + 1).toInt();
+
+  return timeArray;  
 }
 
-bool checkTime(int RTHour, int RTMin, int THour, int TMin) {
-    if (RTHour > THour || (RTHour == THour && RTMin >= TMin)) {
-        return true; 
+bool checkTime(const int* RT, const int* TC) {
+    // Validate input pointers to ensure they are not null pointers
+    if (!RT || !TC ) {
+        Serial.println("Error: Invalid input pointers. Cannot check time.");
+        return false; // Indicate error
+    }
+
+    // Check if current time (RT) is after or equal to target time (T)
+    if (RT[0] > TH[0] || (RT[0] == TH[0] && RT[1] >= TH[1])) {
+        return true;
     } else {
         return false;
     }
 }
+
 
 
