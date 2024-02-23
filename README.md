@@ -24,7 +24,6 @@ Running the Project
 
     flask run --host=A.B.C.D
 
-
     However, i would recommend using gunicorn for better stability on low-end server/computers. 
 
     Upload Arduino Code:
@@ -43,8 +42,6 @@ Usage
         Optionally, enter a shutdown time in the "Hora de Desligamento" field.
         Click the "Programar café" button.
 
-    Check Machine Status:
-        The interface will display the current coffee settings and machine status.
 
 Additional Features
 
@@ -64,3 +61,6 @@ Authors:
 Date:
 
     February 23, 2024
+
+
+
