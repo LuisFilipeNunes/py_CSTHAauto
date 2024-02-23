@@ -54,7 +54,12 @@ Key Components
     Arduino: Microcontroller board for controlling the coffee machine's hardware, connected to a ehternet shield and two relays.
     JSON: Data format used for communication between the web application and Arduino.
 
-Authors:
+Future Updates:
+
+    Control for room light - Using relays.
+    Control AC Unit - Using IR IC.
+
+Author:
 
     LuisFilipeNunes
 
