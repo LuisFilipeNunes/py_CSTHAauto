@@ -4,9 +4,12 @@ body {
   }
   
   .container {
+    max-width: 1366px;
+    position: relative;
     width: 100%;
     padding: 10px;
-    box-sizing: border-box;
+    box-sizing: order-box;
+    flex-column;
   }
   
   .header {
@@ -21,6 +24,8 @@ body {
   }
   
   .menu {
+    max-width: 1366px;
+    position: relative;
     margin-top: 20px;
   }
   
@@ -64,26 +69,3 @@ body {
     color: #ffffff;
     font-size: 16px;
   }
-  
-  /* Responsive styles for smaller screens (up to 600px) */
-  @media screen and (max-width: 600px) {
-    .container {
-      padding: 5px;
-    }
-  
-    .devices {
-      flex-direction: column;
-    }
-  
-    .device {
-      width: 100%;
-    }
-  
-    /* Increase font size for smaller screens */
-    .menu button,
-    .menu input[type="time"],
-    .footer a {
-      font-size: 18px;
-    }
-  }
-  
